@@ -3,6 +3,3 @@
       create: true
       relink: true
       force: true
-
-- shell:
-  - ["git submodule update --init --recursive --remote", "Installing submodules"]
