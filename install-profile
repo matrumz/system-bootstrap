@@ -5,7 +5,7 @@ set -e
 BASE_CONFIG="base"
 CONFIG_SUFFIX=".yaml"
 
-META_DIR="meta"
+META_DIR="."
 CONFIG_DIR="configs"
 PROFILES_DIR="profiles"
 
