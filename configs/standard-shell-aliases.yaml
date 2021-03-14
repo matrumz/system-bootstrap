@@ -1,0 +1,7 @@
+- link:
+    ~/.shell_aliases.d/clear: dotfiles/shell_aliases.d/clear
+    ~/.shell_aliases.d/grep: dotfiles/shell_aliases.d/grep
+    ~/.shell_aliases.d/ls: dotfiles/shell_aliases.d/ls
+    ~/.shell_aliases.d/make: dotfiles/shell_aliases.d/make
+    ~/.shell_aliases.d/navigation: dotfiles/shell_aliases.d/navigation
+    ~/.shell_aliases.d/typos: dotfiles/shell_aliases.d/typos
