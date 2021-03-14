@@ -1,0 +1,12 @@
+# Ubuntu install
+- shell:
+    - command: sudo apt-add-repository -y -u ppa:fish-shell/release-3
+      description: Add fish apt-get repo and update packages
+      stdout: true
+      stderr: true
+      stdin: true
+    - command: sudo apt-get install -y fish
+      description: Install fish
+      stdout: true
+      stderr: true
+      stdin: true
