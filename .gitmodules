@@ -5,3 +5,9 @@
 [submodule "dotfiles"]
 	path = dotfiles
 	url = git@github.com:matrumz/dotfiles.git
+[submodule "plugins/dotbot-sudo"]
+	path = plugins/dotbot-sudo
+	url = https://github.com/DrDynamic/dotbot-sudo.git
+[submodule "plugins/dotbot_plugin_aptget"]
+	path = plugins/dotbot_plugin_aptget
+	url = https://github.com/dein0s/dotbot_plugin_aptget.git
