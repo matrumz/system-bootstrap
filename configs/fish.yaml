@@ -1,0 +1,6 @@
+- sudo:
+    - aptget:
+        fish:
+          #TODO test this for non-ubuntu installs
+          ppa_source: ppa:fish-shell/release-3
+          upgrade: true
