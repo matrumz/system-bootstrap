@@ -1,0 +1,12 @@
+- defaults:
+    shell:
+      stdout: true
+      stderr: true
+      stdin: true
+- shell:
+    - command: curl -L https://get.oh-my.fish | fish
+      description: Install OMF (Oh-My-Fish)
+    - command: fish -c "omf install default"
+      description: "Install OMF theme: Default"
+    - command: fish -c "omf theme default"
+      description: "Enable OMF theme: Default"
