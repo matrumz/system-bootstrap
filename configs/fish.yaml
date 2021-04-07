@@ -1,4 +1,3 @@
-# Ubuntu install
 - shell:
     - command: bash scripts/fish.install
       description: Install fish
