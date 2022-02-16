@@ -1,0 +1,7 @@
+# Custom actions for the "claptrap" rpi
+- shell:
+    - description: SSH Login Greeting
+    - shell: >
+      echo "Logon sequence complete." > /etc/motd
+      && echo "Hello! I am your steward bot. Designation: CL4P-TP, Hyperion Robot, Class C." >> /etc/motd
+      && echo "Please adjust factory settings to meet your needs before deployment." >> /etc/motd
