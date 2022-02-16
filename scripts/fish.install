@@ -25,12 +25,12 @@ case $name in
         sudo apt install -y fish
         ;;
       *)
-        echo "UNKNOWN DEBIAN VERSION FOR FISH INSTALL"
+        echo "UNKNOWN DEBIAN VERSION FOR FISH INSTALL: $version_id"
         exit 1
     esac
     ;;
   *)
-    echo "UNKNOWN PLATFORM FOR FISH INSTALL"
+    echo "UNKNOWN PLATFORM FOR FISH INSTALL: $name"
     exit 1
     ;;
 esac
