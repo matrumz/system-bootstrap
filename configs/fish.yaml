@@ -1,6 +1,10 @@
-- shell:
-    - command: bash scripts/fish.install
-      description: Install fish
+- defaults:
+    shell:
       stdout: true
       stderr: true
       stdin: true
+- shell:
+    - command: bash scripts/fish.install
+      description: Install fish
+    - command: chsh -s /usr/bin/fish
+      description: Set fish as default shell
