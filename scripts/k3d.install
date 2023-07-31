@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+set -e
+
+# current script directory
+SCRIPTS="$(dirname \"${BASH_SOURCE[0]}\" )"
+
+# if wget installed
+if command -v wget &> /dev/null ; then
+  wget -q -O - https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
+# if curl installed
+elif command -v curl &> /dev/null ; then
+  curl -s https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
+# if neither installed
+else
+  # install wget
+  $SCRIPTS/install.sh wget
+  # if successful, rerun this script
+  if [ $? -eq 0 ]; then
+    exec "$0" $@
+  else
+    exit 1
+  fi
+fi
