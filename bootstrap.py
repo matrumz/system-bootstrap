@@ -19,6 +19,7 @@ class Args(BaseModel):
 	profiles: list[Path] = []
 	dry_run: bool = False
 	package_update: bool = True
+	dotbot_args: list[str] = []
 
 def main(args: Args):
 	profiles = [ _Profile.read(p) for p in args.profiles ]
@@ -97,10 +98,19 @@ class _AptGet(_OsPackageManager):
 		return subprocess.run(cmd.split(), check=True)
 
 if __name__ == '__main__':
-	argparser = argparse.ArgumentParser()
-	argparser.add_argument('--configs', type=Path, nargs=argparse.ONE_OR_MORE, default=[])
-	argparser.add_argument('--profiles', type=Path, nargs=argparse.ONE_OR_MORE, default=[])
-	argparser.add_argument('--dry-run', action='store_true')
-	argparser.add_argument('--no-package-update', action='store_false', dest='package_update')
-	args = Args(**vars(argparser.parse_args()))
-	main(args)
+	try:
+		argparser = argparse.ArgumentParser()
+		argparser.add_argument('--configs', type=Path, nargs=argparse.ONE_OR_MORE, default=[])
+		argparser.add_argument('--profiles', type=Path, nargs=argparse.ONE_OR_MORE, default=[])
+		argparser.add_argument('--dry-run', action='store_true')
+		argparser.add_argument('--no-package-update', action='store_false', dest='package_update')
+		args = Args(**vars(argparser.parse_args()))
+		main(args)
+	except KeyboardInterrupt:
+		logging.warning('Interrupted by user')
+		exit(1)
+	except Exception as e:
+		logging.exception('Unhandled exception')
+		exit(1)
+	else:
+		exit(0)
