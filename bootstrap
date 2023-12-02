@@ -1,0 +1,43 @@
+#!/bin/bash
+
+set -e
+
+# This script is used to prep the environment for the bootstrap process.
+# Python, and some dependencies, will need to be installed for the dotbot tool.
+# Python will be left installed for these personal environments of mine.
+
+# If not running as root, will need sudo
+[ "$EUID" -ne 0 ] && sudo="sudo" || sudo=""
+packages_updated=false
+
+safe_update() {
+	if ! $packages_updated ; then $sudo apt-get update ; packages_updated=true ; fi
+}
+
+install() {
+	safe_update
+	$sudo apt-get install -y --no-install-recommends "$@"
+}
+
+# Install Python if not already installed
+if ! command -v python3 &> /dev/null
+then
+	echo "Python3 not found. Installing..."
+	install python3 python3-pip
+fi
+
+# Install git if not already installed
+if ! command -v git &> /dev/null
+then
+	echo "Git not found. Installing..."
+	install git
+fi
+
+# Install dependencies
+pip3 install --user -r requirements.txt
+
+# Initialize submodules
+git submodule update --init --recursive
+
+# Run
+python3 bootstrap.py "$@"
