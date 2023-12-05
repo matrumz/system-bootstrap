@@ -96,7 +96,7 @@ class _Profile(list):
 	def configs(self):
 		''' Return paths for all contained configs, preserving order & removing dups '''
 		for line in _dedup_list(self):
-			yield Path(CONFIGS_DIR, line.strip())
+			yield Path(CONFIGS_DIR, line.strip() + '.yaml')
 
 class _OsPackageManager(ABC):
 	sudo: str = 'sudo' if os.geteuid() != 0 else ''
