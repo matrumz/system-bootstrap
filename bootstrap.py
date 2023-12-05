@@ -2,12 +2,18 @@
 
 from abc import ABC
 import argparse
+from collections import OrderedDict
 import logging
 import os
 from pathlib import Path
 import subprocess
 from pydantic import BaseModel
 
+
+logging.basicConfig(
+	level=logging.INFO,
+	format='BOOTSTRAP.PY %(levelname)s: %(message)s'
+)
 
 # path of this file
 BASE_DIR = Path(__file__).resolve().parent
@@ -21,18 +27,29 @@ class Args(BaseModel):
 	package_update: bool = True
 	dotbot_args: list[str] = []
 
-def main(args: Args):
+def main(args: Args) -> int:
+
+	# Gather list of configs to install
 	profiles = [ _Profile.read(p) for p in args.profiles ]
 	configs: list[Path] = _dedup_list(
 		[ c for p in profiles for c in p.configs() ]
-		+ args.configs
+		+ [ c.resolve() for c in args.configs ]
 	)
 
+	# Ensure all configs exist with either .yml or .yaml extension
+	# Otherwise list missing configs and exit
+	missing_configs = [ c for c in configs if not c.exists() or not c.is_file() or not c.suffix in ['.yml', '.yaml'] ]
+	if missing_configs:
+		logging.error('Missing configs:')
+		for c in missing_configs:
+			logging.error(f'\t{c.as_posix()}')
+		return 1
+
 	if args.dry_run:
-		print('Configs:')
+		logging.info('Configs:')
 		for c in configs:
-			logging.info(f'\t{c.resolve().as_posix()}')
-		return
+			logging.info(f'\t{c.as_posix()}')
+		return 0
 
 	# Loading packages here is useful so not each config has to do it
 	if args.package_update:
@@ -41,8 +58,10 @@ def main(args: Args):
 
 	Dotbot.install_config(*configs)
 
+	return 0
+
 def _dedup_list(l: list) -> list:
-	return list(dict.fromkeys(l))
+	return list(OrderedDict.fromkeys(l))
 
 class Dotbot:
 	''' Wrapper for dotbot '''
@@ -52,16 +71,18 @@ class Dotbot:
 	def install_config(*configs: Path):
 		for c in configs:
 			try:
+				logging.info(f'Installing config: {c.as_posix()}')
 				cmd = [
 					'dotbot',
-					'--exit-on-failure'
+					'--exit-on-failure',
+					'--base-directory', BASE_DIR.as_posix(),
 					'--config-file', c.as_posix()
 				]
-				subprocess.run(*cmd, check=True)
-			except subprocess.CalledProcessError as e:
+				subprocess.run(cmd, check=True)
+			except subprocess.CalledProcessError:
 				return
-			except Exception as e:
-				logging.exception(f'Error executing dotbot: {cmd.join(" ")}')
+			except Exception:
+				logging.exception(f'Error executing dotbot: {" ".join(cmd)}')
 
 class _Profile(list):
 	def __init__(self, *args, **kwargs):
@@ -80,13 +101,14 @@ class _Profile(list):
 class _OsPackageManager(ABC):
 	sudo: str = 'sudo' if os.geteuid() != 0 else ''
 
-	@classmethod
+	@staticmethod
 	def instance() -> '_OsPackageManager':
 		if os.name == 'posix':
 			return _AptGet()
 		else:
 			raise NotImplementedError()
 
+	@staticmethod
 	def update():
 		raise NotImplementedError()
 
@@ -105,11 +127,11 @@ if __name__ == '__main__':
 		argparser.add_argument('--dry-run', action='store_true')
 		argparser.add_argument('--no-package-update', action='store_false', dest='package_update')
 		args = Args(**vars(argparser.parse_args()))
-		main(args)
+		exit(main(args))
 	except KeyboardInterrupt:
 		logging.warning('Interrupted by user')
 		exit(1)
-	except Exception as e:
+	except Exception:
 		logging.exception('Unhandled exception')
 		exit(1)
 	else:

@@ -1,0 +1,10 @@
+- defaults:
+    link:
+      create: true
+      relink: true
+      force: true
+- shell:
+    - command: sudo apt-get install -y vim
+      description: Install vim
+- link:
+    ~/.vimrc: dotfiles/vimrc

@@ -4,7 +4,7 @@
       stderr: true
       stdin: true
 - shell:
-    - command: sudo apt update && sudo apt install -y curl
+    - command: sudo apt-get install -y curl
       description: Install curl (dependency)
     - command: bash -c "env fish <(curl -fsSL https://raw.githubusercontent.com/oh-my-fish/oh-my-fish/master/bin/install) --path=$HOME/.oh-my-fish --config=~/.config/oh-my-fish --noninteractive"
       description: Install OMF (Oh-My-Fish)

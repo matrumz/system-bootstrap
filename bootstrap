@@ -19,6 +19,14 @@ install() {
 	$sudo apt-get install -y --no-install-recommends "$@"
 }
 
+# Check sudo status
+if ! command -v sudo &> /dev/null
+then
+	echo "Sudo not found. Please install."
+	exit 1
+fi
+#TODO: future check to see if current user has passwordless sudo enabled
+
 # Install Python if not already installed
 if ! command -v python3 &> /dev/null
 then
@@ -33,11 +41,11 @@ then
 	install git
 fi
 
-# Install dependencies
+# Install python dependencies
 pip3 install --user -r requirements.txt
 
-# Initialize submodules
-git submodule update --init --recursive
+# Initialize dotfiles submodule
+git submodule update --init --recursive --remote dotfiles
 
 # Run
 python3 bootstrap.py "$@"

@@ -1,2 +1,7 @@
+- defaults:
+    link:
+      create: true
+      relink: true
+      force: true
 - link:
     ~/.inputrc: dotfiles/inputrc
