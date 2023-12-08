@@ -1,0 +1,21 @@
+- defaults:
+    link:
+      create: true
+      relink: true
+      force: true
+
+# tmux
+- shell:
+  - sudo apt-get install -y --no-install-recommends tmux
+
+# oh my tmux
+- shell:
+  - test -d ~/.oh-my-tmux || git clone https://github.com/gpakosz/.tmux.git ~/.oh-my-tmux
+  - mv ~/.tmux.conf ~/.tmux.conf.pre-oh-my-tmux 2> /dev/null || true
+  - ln -s --force ~/.oh-my-tmux/.tmux.conf ~/.tmux.conf
+  - ln -s --force ~/.oh-my-tmux/.tmux.conf.local ~/.tmux.conf.default.local
+
+# tmux config
+- link:
+    ~/.tmux.conf.local: dotfiles/tmux.conf.local
+
