@@ -5,3 +5,6 @@
       force: true
 - link:
     ~/.gitconfig: dotfiles/gitconfig
+- shell:
+  - command: bash scripts/github-ssh-host.install
+    description: Set SSH to use key call "github" for github.com
