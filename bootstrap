@@ -1,0 +1,59 @@
+#!/bin/bash
+
+set -e
+
+# Get script dir
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+# Change to script dir
+cd $SCRIPT_DIR
+
+# This script is used to prep the environment for the bootstrap process.
+# Python, and some dependencies, will need to be installed for the dotbot tool.
+# Python will be left installed for these personal environments of mine.
+
+# If not running as root, will need sudo
+[ "$EUID" -ne 0 ] && sudo="sudo" || sudo=""
+packages_updated=false
+
+safe_update() {
+	if ! $packages_updated ; then $sudo apt-get update ; packages_updated=true ; fi
+}
+
+install() {
+	safe_update
+	$sudo apt-get install -y --no-install-recommends "$@"
+}
+
+# Check sudo status
+if ! command -v sudo &> /dev/null
+then
+	echo "Sudo not found. Please install."
+	exit 1
+fi
+#TODO: future check to see if current user has passwordless sudo enabled
+
+# Install Python if not already installed
+if ! command -v python3 &> /dev/null
+then
+	echo "Python3 not found. Installing..."
+	install python3 python3-pip
+fi
+
+# Install git if not already installed
+if ! command -v git &> /dev/null
+then
+	echo "Git not found. Installing..."
+	install git
+fi
+
+# Install python dependencies
+mkdir --parent .pip
+pip3 install --requirement requirements.txt --target .pip --upgrade --upgrade-strategy only-if-needed
+export PYTHONPATH="$SCRIPT_DIR/.pip:$PYTHONPATH"
+export PATH="$SCRIPT_DIR/.pip/bin:$PATH"
+
+# Initialize dotfiles submodule
+git submodule update --init --recursive --remote dotfiles
+
+# Run
+python3 bootstrap.py "$@"
