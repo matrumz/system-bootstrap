@@ -5,4 +5,3 @@
       force: true
 - link:
     ~/.gitconfig: dotfiles/gitconfig
-    ~/.shell_aliases.d/git: dotfiles/shell_aliases.d/git
