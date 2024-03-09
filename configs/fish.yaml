@@ -6,5 +6,5 @@
 - shell:
     - command: bash scripts/fish.install
       description: Install fish
-    - command: chsh -s /usr/bin/fish
+    - command: sudo chsh -s /usr/bin/fish $(whoami)
       description: Set fish as default shell
