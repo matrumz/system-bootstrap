@@ -36,7 +36,14 @@ fi
 if ! command -v python3 &> /dev/null
 then
 	echo "Python3 not found. Installing..."
-	install python3 python3-pip
+	install python3
+fi
+
+# Install pip if not already installed
+if ! command -v pip &> /dev/null
+then
+	echo "pip not found. Installing..."
+	install python3-pip
 fi
 
 # Install git if not already installed
