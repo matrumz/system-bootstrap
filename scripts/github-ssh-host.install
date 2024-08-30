@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 
 # If the current user does not have GitHub in their config, add it along with the SSH key.
-if ! grep -q "github.com" ~/.ssh/config; then
+if ! grep --quiet "github.com" ~/.ssh/config 2>/dev/null; then
+	mkdir --parents ~/.ssh
 	cat << EOF >> ~/.ssh/config
 Host github.com
   User git
